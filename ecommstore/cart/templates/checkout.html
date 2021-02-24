@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Checkout | {% endblock %}
+
+{% block content %}
+    <h1> CheckOut</h1>
+
+
+    <form method="post" action=".">
+        {% csrf_token %}
+
+        <div class="field has-addons">
+            <div class="control">
+                {{ form|crispy }}
+            </div>
+        </div>
+        <div class="control">
+                <button class="button is-dark is-uppercase">checkout</button>
+        </div>
+    </form>
+
+{% endblock %}

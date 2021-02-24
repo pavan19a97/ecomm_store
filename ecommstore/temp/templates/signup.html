@@ -1,0 +1,29 @@
+{% extends "forms_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    SignUp
+{% endblock%}
+
+
+{% block content %}
+
+    <h1> SignUpForm</h1>
+
+    <div class="row">
+    <div class="col-md-8 col-sm-10 col-12">
+      <h2>Sign up </h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+        {{ u_form }}
+        <button type="submit" class="btn btn-success">Sign up</button>
+      </form>
+    </div>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Already Have An Account? <a class="ml-2" href="{% url 'login' %}">Sign In</a>
+            </small>
+        </div>
+    </div>
+{% endblock%}
