@@ -4,10 +4,13 @@ from django.contrib.auth.decorators import login_required
 from temp.decorators import consumer_required
 from .cart import Cart
 from .forms import CheckOutForm
+from .models import CartProducts
 # Create your views here.
 
 def cart_detail(request):
     cart = Cart(request)
+
+    in_cart =  CartProducts
 
 
     remove_from_cart = request.GET.get('remove_from_cart', '')

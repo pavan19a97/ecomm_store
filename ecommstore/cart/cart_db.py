@@ -1,18 +1,25 @@
 from django.conf import settings
-from temp.models import Product
+
+from temp.models import Product, User
 from .models import CartProducts
 class Cart(object):
     def __init__(self, request):
+        self.request = request
         self.session = request.session
         cart = self.session.get(settings.CART_SESSION_ID)
-        if not cart:
-            cart = self.session[settings.CART_SESSION_ID] = {}
+        user_id = request.user
+        cart  = CartProducts.objects.filter(cartUser = user_id)
+        if len(cart)==0:
+            cart = {}
 
         self.cart = cart
 
+
     def __iter__(self):
-        for p in self.cart.keys():
-            self.cart[str(p)]['product'] = Product.objects.get(pk=p)
+        cart = CartProducts.objects.filter(cartUser=self.request.user)
+        for item in cart:
+
+            self.cart[str(item.id)]['product'] = Product.objects.get(title = item.cartProduct)
 
         for item in self.cart.values():
             item['total_price'] = item['product'].price * item['quantity']
@@ -51,6 +58,6 @@ class Cart(object):
 
     def get_total_cost(self):
         for p in self.cart.keys():
-            self.cart[str(p)]['product'] = Product.objects.get(pk=p)
+            self.cart[str(p)]['product'] = Product.objects.get(cartProduct=p)
 
         return sum(item['quantity'] * item['product'].price for item in self.cart.values())

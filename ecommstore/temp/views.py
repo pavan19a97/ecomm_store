@@ -5,19 +5,49 @@ from django.contrib.auth import forms
 from django.contrib.auth.decorators import login_required
 from django.utils.text import slugify
 from django.db.models import Q
+from django.core.paginator import Paginator
 from .decorators import  consumer_required, vendor_required
 from .models import Product,User, Category
-
+from cart.models import CartProducts
 from cart.cart import Cart
+
+
 # Create your views here.
+def filterProducts(min, max, products):
+    print(min, max)
+
+    filteredPro = Product.objects.filter(price__range=(min, max))
+    print(filteredPro)
+    return filteredPro
+
 
 def home(request):
     user = request.user
     if user.is_authenticated and user.is_vendor and not user.is_consumer:
         return redirect('vendor_home')
+
     products = Product.objects.all()
 
-    return render(request, "home.html", {'products':products})
+    if request.GET.get('min') and request.GET.get('min'):
+        min = request.GET.get('min')
+        max = request.GET.get('max')
+
+        products = filterProducts(min, max, products)
+    paginator =  Paginator(products, 2)
+    # products = paginator.page(2)
+    if request.GET.get('page'):
+        page_num =  request.GET.get('page')
+        products = paginator.page(page_num)
+        page_obj = paginator.get_page(page_num)
+    else:
+        if len(products) > 0:
+            products = paginator.page(1)
+            page_obj = paginator.get_page(1)
+        else:
+            products = None
+            page_obj = None
+
+    return render(request, "home.html", {'products':products, "paginator": paginator,"page_obj": page_obj, "range": range(1, paginator.num_pages+1)})
 
 def register(request):
     if request.method == 'POST':
@@ -65,9 +95,34 @@ def product(request, category_slug, product_slug):
         form = AddToCartForm(request.POST)
 
         if form.is_valid():
-            quantity = form.cleaned_data['quantity']
 
-            cart.add(product_id=product.id, quantity=quantity, update_quantity=False)
+            quantity = form.cleaned_data['quantity']
+            if request.user.is_authenticated:
+
+                queryy = CartProducts.objects.filter(cartUser=request.user, cartProduct=product)
+                print(len(queryy))
+                if len(queryy) == 0:
+                    cartpro = CartProducts(cartUser=request.user, cartProduct=product, quantity=quantity)
+                    cartpro.save()
+                else:
+                    queryy[0].quantity +=1
+                    queryy[0].save()
+
+                cart.add(product_id=product.id, quantity=quantity, update_quantity=False)
+            else:
+                cart.add(product_id=product.id, quantity=quantity, update_quantity=False)
+
+            # cart = CartProducts.objects.filter(cartUser=request.user)
+            # for item in cart:
+            #     print(item.id, item.cartProduct, item.cartUser)
+            # for p in cart:
+            #     cart1 = Product.objects.get(title=p.cartProduct)
+            #     print(cart1)
+            # for p in cart:
+            #     cart[str(p)]['product'] = Product.objects.get(title=p)
+            #
+            # print(sum(item['quantity'] * item['product'].price for item in cart.values()))
+
 
             messages.success(request, 'The product was added to the cart')
 
@@ -85,9 +140,10 @@ def search(request):
     query = request.GET.get('query', '')
     print(query)
     products = Product.objects.filter(Q(title__icontains=query)| Q(description__icontains=query))
-    print(products)
+
     # if products == None:
     #     return render(request,'product/search.html', {'products':products,'query': query , 'message':"none"})
     return render(request,'products/search.html', {'products':products,'query': query })
 
 # cart
+

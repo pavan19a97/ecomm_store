@@ -27,15 +27,19 @@
                 </a>
             </div>
 
+
             <div class ="navbar-start">
                 <div class = "navbar-item">
-                    <form method="get" action="{% url 'search' %}">
+                    <form method="get" class="row"action="{% url 'search' %}">
                         <div class ="fiels has-addons">
                             <div class="control">
                                 <input type="text" class = 'input' placeholder="search.." name = "query"/>
                             </div>
                         </div>
                     </form>
+
+                    {% block filter%}
+                    {% endblock%}
                 </div>
             </div>
 
@@ -68,6 +72,9 @@
              </div>
         </nav>
 
+<!--        this is hell-->
+<!--        {% include 'parts/side_bar.html'%}-->
+<!--        this is too-->
         <section class="section">
             <div class="container">
                 {% block content %}
@@ -76,7 +83,9 @@
         </section>
 
         <footer class="footer">
+            {% block footer %}
 
+            {% endblock %}
         </footer>
     </body>
 </html>
