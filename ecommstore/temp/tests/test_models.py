@@ -24,7 +24,7 @@ class TestProductsModel(TestCase):
         category = Category.objects.create(title='django', slug='django')
         user = User.objects.create(username='admin', is_vendor=True)
         self.data1 = Product.objects.create(category=category, title='django beginners', vendor= user,
-                                            slug='django-beginners', price='20.00', image='django')
+                                            slug='django-beginners', price='20.00', image='django', thumbnail ='django_thumb')
         self.data2 = Product.objects.create(category=category, title='django advanced', vendor= user,
                                              slug='django-advanced', price='20.00', image='django')
 
@@ -53,3 +53,5 @@ class TestProductsModel(TestCase):
         """
         data = Product.objects.all()
         self.assertEqual(data.count(), 2)
+
+

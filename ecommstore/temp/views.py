@@ -14,7 +14,6 @@ from cart.cart import Cart
 
 # Create your views here.
 def filterProducts(min, max, products):
-    print(min, max)
 
     filteredPro = Product.objects.filter(price__range=(min, max))
     print(filteredPro)
