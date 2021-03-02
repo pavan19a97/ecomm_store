@@ -1,5 +1,5 @@
 from django.conf import settings
-from apps.core.models import Product
+from apps.product.models import Product
 from .models import CartProducts
 class Cart(object):
     def __init__(self, request):
