@@ -1,5 +1,5 @@
 from django.db import models
-from temp.models import User, Product
+from apps.core.models import User, Product
 # Create your models here.
 
 class CartProducts(models.Model):

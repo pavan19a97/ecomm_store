@@ -12,3 +12,6 @@ class CartViewsTestCases(TestCase):
         self.assertEqual(response.status_code, 200)
         response = self.c.get("cart/?remove_from_cart=1")
         self.assertEqual(response.status_code, 404)
+    def test_checkout(self):
+        response = self.c.get(reverse("checkout"))
+        self.assertEqual(response.status_code, 302)

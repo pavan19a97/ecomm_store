@@ -31,8 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'cart',
-    'temp',
+    'apps.cart',
+    'apps.core',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -65,8 +65,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'temp.context_processor.menu_categories',
-                'cart.context_processers.cart'
+                'apps.core.context_processor.menu_categories',
+                'apps.cart.context_processers.cart'
 
             ],
         },
@@ -129,6 +129,6 @@ LOGIN_REDIRECT_URL = 'ecommstore_home'
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'ecommstore_home'
 STATIC_URL = '/static/'
-AUTH_USER_MODEL = 'temp.User'
+AUTH_USER_MODEL = 'core.User'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/') # 'data' is my media folder

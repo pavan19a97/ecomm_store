@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from temp.decorators import consumer_required
-from .cart import Cart
+from apps.core.decorators import consumer_required
+from apps.cart.cart import Cart
 from .forms import CheckOutForm
 from .models import CartProducts
 # Create your views here.
